@@ -58,6 +58,54 @@ public class PhoneDao {
 		}
 	}
 	
+	//사람 1명 가져오기
+	public PersonVo getPerson(int personId) {
+		getConnection();
+		PersonVo personVo = null;
+		try {
+			// SQL문 준비/ 바인딩 / 실행
+			/*
+			SELECT person_id,
+			        name,
+			        hp,
+			        company
+			FROM person
+			where person_id = 6;
+			 */
+			String query = "";
+			query += " SELECT person_id, ";
+			query += "		  name,  ";
+			query += "  	  hp, ";
+			query += " 		  company ";
+			query += " FROM person ";
+			query += " where person_id = ? ";
+			
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, personId);
+			
+			rs = pstmt.executeQuery();
+			
+			
+			//결과처리
+			while(rs.next()) {
+				int personID = rs.getInt("person_id");
+				String name = rs.getString("name");
+				String hp = rs.getString("hp");
+				String company = rs.getString("company");
+				
+				personVo = new PersonVo(personID, name, hp, company);
+			}
+		}catch (Exception e) {
+			System.out.println("error:" + e);
+		}
+		
+		
+		
+		close();
+		return personVo;
+		
+	}
+	
 	//phone 검색
 	public List<PersonVo> phonesearchList(String search) {
 		getConnection();
